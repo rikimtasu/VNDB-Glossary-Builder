@@ -26,6 +26,8 @@ export interface BuildOptions {
   includeTraits: boolean;
   maxTraits: number;
   includeSpoilerInfo: boolean;
+  /** VNDB reports gender as [apparent, real]; prefer the real (spoiler) value. */
+  preferSpoilerValues: boolean;
   includeReading: boolean;
 }
 
@@ -38,6 +40,7 @@ export const DEFAULT_OPTIONS: BuildOptions = {
   includeTraits: true,
   maxTraits: 4,
   includeSpoilerInfo: true,
+  preferSpoilerValues: true,
   includeReading: false,
 };
 
@@ -131,7 +134,9 @@ function characterInfo(
   o: BuildOptions,
 ): string {
   const parts: string[] = [];
-  const gender = (c.gender ?? [null])[0];
+  const genders = c.gender ?? [null];
+  const gender =
+    o.preferSpoilerValues && genders.length > 1 && genders[1] ? genders[1] : genders[0];
   const g = gender ? GENDER_LABELS[gender] : "";
   if (g) parts.push(g);
   if (role) parts.push(ROLE_LABELS[role] ?? role);

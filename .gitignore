@@ -25,3 +25,6 @@ Desktop.ini
 # temp verification artifacts
 _verify.png
 ffprof/
+
+# python bytecode
+__pycache__/

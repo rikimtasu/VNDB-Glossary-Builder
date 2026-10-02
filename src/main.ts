@@ -48,7 +48,11 @@ function loadSettings(): Settings {
   };
   try {
     const raw = localStorage.getItem(SETTINGS_KEY);
-    if (raw) return { ...fallback, ...(JSON.parse(raw) as Partial<Settings>) };
+    if (raw) {
+      const merged = { ...fallback, ...(JSON.parse(raw) as Partial<Settings>) };
+      merged.options = { ...fallback.options, ...(merged.options ?? {}) };
+      return merged;
+    }
   } catch {
     /* ignore */
   }
@@ -119,6 +123,7 @@ document.querySelector("#app")!.innerHTML = `
           <div class="opt-row"><label>Max traits:</label>
             <input type="number" id="opt-trait-max" min="0" max="20" /></div>
           <label><input type="checkbox" id="opt-spoiler" /> Flag spoilered characters</label>
+          <label><input type="checkbox" id="opt-spoiler-values" /> Prefer true (spoiler) values</label>
           <label><input type="checkbox" id="opt-reading" /> Also repeat romanization in info</label>
         </div>
         <button id="btn-fetch-append" class="primary">Fetch Characters → Append</button>
@@ -856,6 +861,7 @@ function bindOptions() {
   check("#opt-traits", () => o.includeTraits, (v) => (o.includeTraits = v));
   num("#opt-trait-max", () => o.maxTraits, (v) => (o.maxTraits = v));
   check("#opt-spoiler", () => o.includeSpoilerInfo, (v) => (o.includeSpoilerInfo = v));
+  check("#opt-spoiler-values", () => o.preferSpoilerValues, (v) => (o.preferSpoilerValues = v));
   check("#opt-reading", () => o.includeReading, (v) => (o.includeReading = v));
 
   const shape = $("#export-shape") as HTMLSelectElement;

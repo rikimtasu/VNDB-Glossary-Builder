@@ -61,6 +61,21 @@ const takeshi = terms.find((t) => t.src === "倉成 武")!;
 check("spoiler flag", takeshi.info.includes("[Spoiler]"), takeshi.info);
 check("stats", stats.noOriginal === 0 && stats.characters === 2, JSON.stringify(stats));
 
+// VNDB gender is [apparent, real]: defaults prefer the true (spoiler) value.
+const secretive: any = {
+  id: "c99",
+  name: "Hidden One",
+  original: "隠し子",
+  aliases: [],
+  gender: ["a", "f"],
+  vns: [{ id: "v17", role: "side", spoiler: 0 }],
+  traits: [],
+};
+const shown = termsFromVn(vn, [secretive], { ...DEFAULT_OPTIONS });
+check("spoiler gender shown by default", shown.terms[0].info.includes("Female"), shown.terms[0].info);
+const veiled = termsFromVn(vn, [secretive], { ...DEFAULT_OPTIONS, preferSpoilerValues: false });
+check("apparent gender when opted out", veiled.terms[0].info.includes("Ambiguous"), veiled.terms[0].info);
+
 console.log("[validate]");
 const issues = validateTerms([
   { src: "", dst: "x", info: "", enabled: true, note: "" },

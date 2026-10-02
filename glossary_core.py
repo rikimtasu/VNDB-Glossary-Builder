@@ -322,6 +322,9 @@ class BuildOptions:
     include_traits: bool = True
     max_traits: int = 4
     include_spoiler_info: bool = True
+    #: VNDB reports gender/sex as [apparent, real]. Prefer the real (spoiler)
+    #: value so the glossary works like VNDB's "spoil me" view.
+    prefer_spoiler_values: bool = True
     #: The romanized name now goes into ``dst`` by default, so repeating it in
     #: ``info`` is normally redundant.
     include_reading: bool = False
@@ -394,7 +397,11 @@ def _character_info(
     suffix: str = "",
 ) -> str:
     parts: list[str] = []
-    gender = (character.get("gender") or [None])[0]
+    gender_values = character.get("gender") or [None]
+    if options.prefer_spoiler_values and len(gender_values) > 1 and gender_values[1]:
+        gender = gender_values[1]
+    else:
+        gender = gender_values[0]
     label = GENDER_LABELS.get(gender or "")
     if label:
         parts.append(label)

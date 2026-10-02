@@ -112,6 +112,10 @@ Settings (endpoint, build options, LinguaGacha folder) persist in `localStorage`
   tool queries `/character` with the nested `vn` filter instead.
 - Spoiler-marked roles are only flagged in `info` when the "Flag spoilered
   characters" option is on — nothing about the VN's plot is exposed in the GUI.
+- Spoiler defaults behave like VNDB's "spoil me" view: all characters are always
+  fetched regardless of spoiler level, and the "Prefer true (spoiler) values"
+  option (on by default) uses VNDB's real gender value instead of the apparent
+  one when they differ.
 
 ## License
 

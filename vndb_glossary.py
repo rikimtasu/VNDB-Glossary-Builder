@@ -64,6 +64,7 @@ def load_settings() -> dict[str, Any]:
         "include_traits": True,
         "max_traits": 4,
         "include_spoiler_info": True,
+        "prefer_spoiler_values": True,
         "include_reading": False,
         "export_shape": core.SHAPE_LIST,
         "skip_untranslated": True,
@@ -433,6 +434,7 @@ class App(tk.Tk):
         self.opt_traits = tk.BooleanVar(value=self.settings["include_traits"])
         self.opt_trait_max = tk.IntVar(value=self.settings["max_traits"])
         self.opt_spoiler = tk.BooleanVar(value=self.settings["include_spoiler_info"])
+        self.opt_spoiler_values = tk.BooleanVar(value=self.settings["prefer_spoiler_values"])
         self.opt_reading = tk.BooleanVar(value=self.settings["include_reading"])
         ttk.Checkbutton(traits, text="Write character traits",
                         variable=self.opt_traits).pack(anchor="w")
@@ -442,6 +444,8 @@ class App(tk.Tk):
         ttk.Spinbox(row2, from_=0, to=20, width=4, textvariable=self.opt_trait_max).pack(side="left")
         ttk.Checkbutton(traits, text="Flag spoilered characters",
                         variable=self.opt_spoiler).pack(anchor="w")
+        ttk.Checkbutton(traits, text="Prefer true (spoiler) values",
+                        variable=self.opt_spoiler_values).pack(anchor="w")
         ttk.Checkbutton(traits, text="Also repeat romanization in info",
                         variable=self.opt_reading).pack(anchor="w")
 
@@ -856,6 +860,7 @@ class App(tk.Tk):
             include_traits=bool(self.opt_traits.get()),
             max_traits=as_int(self.opt_trait_max, 4),
             include_spoiler_info=bool(self.opt_spoiler.get()),
+            prefer_spoiler_values=bool(self.opt_spoiler_values.get()),
             include_reading=bool(self.opt_reading.get()),
         )
 
@@ -1320,6 +1325,7 @@ class App(tk.Tk):
                 "include_traits": bool(self.opt_traits.get()),
                 "max_traits": as_int(self.opt_trait_max, 4),
                 "include_spoiler_info": bool(self.opt_spoiler.get()),
+                "prefer_spoiler_values": bool(self.opt_spoiler_values.get()),
                 "include_reading": bool(self.opt_reading.get()),
                 "export_shape": self.shape_var.get(),
                 "skip_untranslated": bool(self.skip_untranslated.get()),

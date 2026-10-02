@@ -115,6 +115,18 @@ def test_build_terms() -> None:
     check("spoiler marker", "[Spoiler]" in takeshi.info, takeshi.info)
     check("main role", "Protagonist" in takeshi.info, takeshi.info)
 
+    # VNDB gender is [apparent, real]: defaults prefer the true (spoiler) value.
+    secretive = {
+        "id": "c99", "name": "Hidden One", "original": "隠し子", "aliases": [],
+        "gender": ["a", "f"], "vns": [{"id": "v17", "role": "side", "spoiler": 0}],
+        "traits": [],
+    }
+    shown, _ = core.terms_from_vn(vn, [secretive], core.BuildOptions())
+    check("spoiler gender shown by default", "Female" in shown[0].info, shown[0].info)
+    veiled, _ = core.terms_from_vn(
+        vn, [secretive], core.BuildOptions(prefer_spoiler_values=False))
+    check("apparent gender when opted out", "Ambiguous" in veiled[0].info, veiled[0].info)
+
     alias = next(t for t in terms if t.src == "空ピー")
     check("alias info annotated", "Alias of" in alias.info, alias.info)
 
